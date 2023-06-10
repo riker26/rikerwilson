@@ -17,17 +17,22 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: 200px;
+        margin-top: 20px;
       }
 
+
+
       .color-input {
-        padding: 12px;
-        background-color: #fff;
+        padding: 3px;
+        background-color: transparent;
         font-size: 18px;
+        font-family: 'Courier New', Courier, monospace;
         border-radius: 6px;
         border: none;
-        width: 300px;
+        width: 190px;
         outline: none;
+        
+        
       }
 
       .text {
@@ -36,46 +41,142 @@
       }
 
       .color-input::placeholder {
+        font-family: 'Courier New', Courier, monospace;
         color: #202020; 
       }
+
+      .input-container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+      }
+      .hashtag{
+        font-family: 'Courier New', Courier, monospace;
+        padding: 0px;
+        font-size: 18px;
+        color: #202020; 
+
+      }
+      
+      .funnyjoke {
+        font-size: 12px;
+        margin-top: 10px;
+        transition: opacity 0.5s ease;
+        opacity: 0.8;
+        color: #202020; 
+      }
+      html, body{
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    .color-input.placeholder-white::placeholder {
+        color: #fff;
+    }
+
+    .color-input.placeholder-black::placeholder {
+        color: #000;
+    }
     </style>
     <script src="js/script.js"></script>
   </head>
   <body>
     <div class="container">
+    <div class = "input-container">
+        <p class = "hashtag" id= "hashtag">#</p>
       <input
         
         type="text"
         class="color-input"
+        id = "hashtag"
+        
         placeholder="Enter a hex color"
         
-        oninput="updateBackgroundColor(this.value)"
+
         onfocus="this.placeholder = ''"
         onblur="this.placeholder = 'Enter a hex color'"
+        oninput="updateBackgroundColor('#' + this.value); this.placeholder = ''"
+
+        maxlength="6";
       />
       
-      <p class="text">Color Picker? I hardly even know her!</p>
     </div>
+    <p class="funnyjoke" id = "joke">Color Picker? I hardly even know her!</p>
+
 
     <script>
+        window.onload = function() {
+            var input = document.querySelector('.color-input');
+            input.focus();
+            window.addEventListener('keydown', function(e) {
+                if (document.activeElement !== input) {
+                    input.focus();
+                    input.value = input.value; // reset the caret position to the end
+                }
+            });
+        };
+
         var isFirstupdate = true;
 
-      function updateBackgroundColor(color) {
+        function updateBackgroundColor(color) {
         var validColor = /^#([0-9a-fA-F]{3}){1,2}$/;
         if (validColor.test(color)) {
-
-          document.body.style.transition = 'none';
-          document.body.style.opacity = '0';
-          setTimeout(function () {
+            document.body.style.transition = 'none';
+            document.body.style.opacity = '0';
+            setTimeout(function () {
             document.body.style.transition = 'background-color 0.5s ease';
             document.body.style.opacity = '1';
 
             document.body.style.backgroundColor = color;
-            document.querySelector('.color-input').style.backgroundColor = color; // Update input box background color
 
-          }, 0);
+            var jokeElement = document.getElementById('joke');
+            jokeElement.style.transition = 'opacity 0.5s ease';
+            jokeElement.style.opacity = '0';
+            }, 0);
+            setTimeout(function () {
+            jokeElement.style.display = 'none';
+            }, 500);
+
+            var inputElement = document.querySelector('.color-input');
+            var brightness = calculateBrightness(color);
+            var textColor = '#202020';
+            if(color.toLowerCase() === "#000"){
+                textColor = '#000';
+                inputElement.classList.add('placeholder-black');
+            }
+            else if(color.toLowerCase() === "#fff"){
+                textColor = '000';
+                inputElement.classList.add('placeholder-black');
+
+                
+            }
+            else{
+            textColor = brightness > 0.5 ? '#000' : '#fff';
+            inputElement.className = 'color-input ' + (brightness > 0.5 ? 'placeholder-black' : 'placeholder-white');
+
+            }
+            var hashtagElement = document.getElementById('hashtag');
+            inputElement.style.color = textColor;
+            hashtagElement.style.color = textColor;
+
+
         }
-      }
+        }
+
+        function calculateBrightness(color) {
+        var hexColor = color.replace('#', '');
+        if (hexColor.length === 0) {
+            return 1; // Default brightness for empty input
+        }
+        var r = parseInt(hexColor.substr(0, 2), 16);
+        var g = parseInt(hexColor.substr(2, 2), 16);
+        var b = parseInt(hexColor.substr(4, 2), 16);
+        var brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness / 255;
+        }
+
     </script>
   </body>
 </html>
