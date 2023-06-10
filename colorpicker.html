@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Color Picker</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+    :root {
+        --starting-background-color: #fff; 
+      }
+      body {
+        transition: background-color 0.5s ease;
+        background-color:var(--starting-background-color);
+        font-family: Calibri, Arial, sans-serif;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 200px;
+      }
+
+      .color-input {
+        padding: 12px;
+        background-color: #fff;
+        font-size: 18px;
+        border-radius: 6px;
+        border: none;
+        width: 300px;
+        outline: none;
+      }
+
+      .text {
+        font-size: 24px;
+        margin-top: 20px;
+      }
+
+      .color-input::placeholder {
+        color: #202020; 
+      }
+    </style>
+    <script src="js/script.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <input
+        
+        type="text"
+        class="color-input"
+        placeholder="Enter a hex color"
+        
+        oninput="updateBackgroundColor(this.value)"
+        onfocus="this.placeholder = ''"
+        onblur="this.placeholder = 'Enter a hex color'"
+      />
+      
+      <p class="text">Color Picker? I hardly even know her!</p>
+    </div>
+
+    <script>
+        var isFirstupdate = true;
+
+      function updateBackgroundColor(color) {
+        var validColor = /^#([0-9a-fA-F]{3}){1,2}$/;
+        if (validColor.test(color)) {
+
+          document.body.style.transition = 'none';
+          document.body.style.opacity = '0';
+          setTimeout(function () {
+            document.body.style.transition = 'background-color 0.5s ease';
+            document.body.style.opacity = '1';
+
+            document.body.style.backgroundColor = color;
+            document.querySelector('.color-input').style.backgroundColor = color; // Update input box background color
+
+          }, 0);
+        }
+      }
+    </script>
+  </body>
+</html>
