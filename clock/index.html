@@ -1,42 +1,94 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Clock</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <style> 
-    :root{
-      --primary-color: #333;
-      --secondary-color: #000;
-      --text-color: #fff;
+<head>
+  <title>Analog Clock</title>
+  <style>
+    body {
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
     }
 
-;
-    .container{
-      background-color: var(--secondary-color);
-      color: var(--text-color);
-      padding: 40px;
+    #clock {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      top: -40px;
     }
 
-    </style>
+    .hand {
+      background-color: #fff;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform-origin: bottom center;
+      transition-timing-function: cubic-bezier(0.26, 0.9, 0.37, 0.99);
+    }
 
+    #hour-hand {
+      width: 6px;
+      height: 90px;
+      transform: translateX(-50%) rotate(0deg);
+    }
 
-  </head>
-  <body>
+    #minute-hand {
+      width: 6px;
+      height: 90px;
+      transform: translateX(-50%) rotate(0deg);
+    }
 
-    
-    <div class="clock">
-      <div class="circle"></div>
-      <div class="dashes"></div>
-      <div class="numbers"></div>
-    </div>
-    <div class="guess-container">
-      <input type="text" id="guess-input" placeholder="Enter the time">
-      <button onclick="checkTime()">Check</button>
-      <p id="result"></p>
-    </div>
-    <script src="js/script.js"></script>
-  </body>
+    #second-hand {
+      width: 2px;
+      height: 100px;
+      transform: translateX(-50%) rotate(0deg);
+    }
+
+    #center {
+      width: 8px;
+      height: 8px;
+      background-color: #fff;
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+<body>
+  <div id="clock">
+    <div id="hour-hand" class="hand"></div>
+    <div id="minute-hand" class="hand"></div>
+    <div id="second-hand" class="hand"></div>
+    <div id="center"></div>
+  </div>
+
+  <script>
+    function updateClock() {
+      var now = new Date();
+      var hours = now.getHours();
+      var minutes = now.getMinutes();
+      var seconds = now.getSeconds();
+
+      var hourHand = document.getElementById('hour-hand');
+      var minuteHand = document.getElementById('minute-hand');
+      var secondHand = document.getElementById('second-hand');
+
+      var hourAngle = (hours % 12 + minutes / 60) * 30;
+      var minuteAngle = (minutes + seconds / 60) * 6;
+      var secondAngle = seconds * 6;
+
+      hourHand.style.transform = `translateX(-50%) rotate(${hourAngle}deg)`;
+      minuteHand.style.transform = `translateX(-50%) rotate(${minuteAngle}deg)`;
+      secondHand.style.transform = `translateX(-50%) rotate(${secondAngle}deg)`;
+
+      setTimeout(updateClock, 1000);
+    }
+
+    updateClock();
+  </script>
+</body>
 </html>
-
-
